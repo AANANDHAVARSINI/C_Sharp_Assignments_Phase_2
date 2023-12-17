@@ -1,0 +1,53 @@
+public class ZeroEvenOdd {
+    private int n;
+    private readonly object locker = new ();
+    private int token;
+    private bool flag;
+    public ZeroEvenOdd(int n) {
+        this.n = n;
+        this.token = 1;
+        this.flag = false;
+    }
+
+    // printNumber(x) outputs "x", where x is an integer.
+    public void Zero(Action<int> printNumber) {
+        while (true)
+        {
+            lock(locker){
+                if(token > n) return;
+                if(!flag){
+                    printNumber.Invoke(0);
+                    flag = true;
+                }
+            }
+        }
+    }
+
+    public void Even(Action<int> printNumber) {
+        while (true)
+        {
+            if(token > n) return;
+            lock(locker){
+                if(flag && token % 2 == 0){
+                    printNumber.Invoke(token);
+                    token++;
+                    flag = !flag;
+                }
+            }
+        }
+    }
+
+    public void Odd(Action<int> printNumber) {
+        while (true)
+        {
+            if(token > n) return;
+            lock(locker){
+                if(flag && token % 2 != 0){
+                    printNumber.Invoke(token);
+                    token++;
+                    flag = !flag;
+                }
+            }
+        }
+    }
+}
